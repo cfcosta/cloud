@@ -12,11 +12,13 @@
     in
     {
       nixosConfigurations = {
-        dns-server = nixpkgs.lib.nixosSystem {
+        pylon = nixpkgs.lib.nixosSystem {
           inherit system;
           modules = [
             ./common
-            ./servers/dns-server.nix
+            ./modules/dns.nix
+
+            ./targets/pylon.nix
           ];
         };
       };
