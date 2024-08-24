@@ -1,15 +1,24 @@
 {
-  description = "A very basic flake";
+  description = "CFCC: Cainã Costa's Cloud Configuration";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
   };
 
-  outputs = { self, nixpkgs }: {
-
-    packages.x86_64-linux.hello = nixpkgs.legacyPackages.x86_64-linux.hello;
-
-    packages.x86_64-linux.default = self.packages.x86_64-linux.hello;
-
-  };
+  outputs =
+    { nixpkgs, ... }:
+    let
+      system = "x86_64-linux";
+    in
+    {
+      nixosConfigurations = {
+        dns-server = nixpkgs.lib.nixosSystem {
+          inherit system;
+          modules = [
+            ./common
+            ./servers/dns-server.nix
+          ];
+        };
+      };
+    };
 }
