@@ -25,6 +25,17 @@ in
       LC_TIME = locale;
     };
 
+    security = {
+      auditd.enable = true;
+
+      audit = {
+        enable = true;
+        rules = [
+          "-a exit,always -F arch=b64 -S execve"
+        ];
+      };
+    };
+
     services.openssh = {
       enable = true;
 

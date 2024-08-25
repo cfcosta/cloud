@@ -24,9 +24,6 @@
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [
-            (import ./packages inputs)
-          ];
         };
       in
       {
