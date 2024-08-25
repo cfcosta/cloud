@@ -43,6 +43,11 @@ in
     # PCI Compliance lmao
     environment.systemPackages = [ pkgs.clamav ];
 
+    # Make partitions that shouldn't have executables noexec
+    fileSystems."/".options = [ "noexec" ];
+    fileSystems."/srv".options = [ "noexec" ];
+    fileSystems."/var/log".options = [ "noexec" ];
+
     i18n.defaultLocale = locale;
     i18n.extraLocaleSettings = {
       LC_ADDRESS = locale;
