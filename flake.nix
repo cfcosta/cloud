@@ -3,24 +3,24 @@
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs =
-    { nixpkgs, ... }:
-    let
-      system = "x86_64-linux";
-    in
-    {
-      nixosConfigurations = {
-        pylon = nixpkgs.lib.nixosSystem {
+    inputs@{ nixpkgs, flake-utils, ... }:
+    (import ./nixos.nix inputs)
+    // flake-utils.lib.eachDefaultSystem (
+      system:
+      let
+        pkgs = import nixpkgs {
           inherit system;
-          modules = [
-            ./common
-            ./modules/dns.nix
-
-            ./targets/pylon.nix
-          ];
         };
-      };
-    };
+      in
+      {
+        devShells.default = pkgs.mkShell {
+          name = "cloud";
+          packages = [ ];
+        };
+      }
+    );
 }
