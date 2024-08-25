@@ -4,10 +4,16 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    agenix.url = "github:ryantm/agenix";
   };
 
   outputs =
-    inputs@{ nixpkgs, flake-utils, ... }:
+    inputs@{
+      nixpkgs,
+      flake-utils,
+      agenix,
+      ...
+    }:
     (import ./nixos.nix inputs)
     // flake-utils.lib.eachDefaultSystem (
       system:
@@ -19,7 +25,9 @@
       {
         devShells.default = pkgs.mkShell {
           name = "cloud";
-          packages = [ ];
+          packages = [
+            agenix.packages.${system}.default
+          ];
         };
       }
     );

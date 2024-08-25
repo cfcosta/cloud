@@ -1,18 +1,19 @@
-{ lib, ... }:
+{ config, ... }:
 let
-  inherit (lib) mkOption types;
+  inherit (config) age;
 in
 {
-  options.cloud.tailscale = {
-    api_key = mkOption {
-      type = types.str;
-      description = "The API key to use for automatically connecting to tailscale";
-    };
-  };
-
   config = {
-    networking.firewall.trustedInterfaces = [ "tailscale0" ];
+    networking.firewall = {
+      checkReversePath = true;
+      trustedInterfaces = [ "tailscale0" ];
+    };
 
-    services.tailscale.enable = true;
+    services.tailscale = {
+      enable = true;
+
+      authKeyFile = age.secrets.tailscale.path;
+      extraUpFlags = [ "--ssh" ];
+    };
   };
 }

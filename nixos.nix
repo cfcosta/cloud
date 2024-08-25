@@ -1,13 +1,17 @@
-{ nixpkgs, ... }:
+{ nixpkgs, agenix, ... }:
 let
   inherit (builtins)
     attrNames
     filter
+    listToAttrs
     map
     readDir
-    listToAttrs
     ;
-  inherit (nixpkgs.lib) hasSuffix removeSuffix nixosSystem;
+  inherit (nixpkgs.lib)
+    hasSuffix
+    nixosSystem
+    removeSuffix
+    ;
 
   isTarget = n: (hasSuffix ".nix" n) && !(hasSuffix "default.nix" n);
 in
@@ -23,6 +27,7 @@ in
           system = "x86_64-linux";
 
           modules = [
+            agenix.nixosModules.default
             ./targets/${n}
             ./common
             ./modules

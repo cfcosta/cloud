@@ -5,6 +5,10 @@ let
 in
 {
   config = {
+    age.secrets = {
+      tailscale.file = ../secrets/tailscale.age;
+    };
+
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
 
