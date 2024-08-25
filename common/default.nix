@@ -1,6 +1,13 @@
-{ lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (config) age;
   inherit (lib) mkForce;
+
   locale = "en_US.UTF-8";
 in
 {
@@ -11,6 +18,12 @@ in
 
     boot.loader.systemd-boot.enable = true;
     boot.loader.efi.canTouchEfiVariables = true;
+
+    # Disable all default NixOS packages
+    environment.defaultPackages = mkForce [ ];
+
+    # PCI Compliance lmao
+    environment.systemPackages = [ pkgs.clamav ];
 
     i18n.defaultLocale = locale;
     i18n.extraLocaleSettings = {
@@ -54,5 +67,7 @@ in
     };
 
     system.stateVersion = "24.11";
+
+    users.users.root.initialPasswordFile = age.secrets.root-password.path;
   };
 }
