@@ -61,6 +61,22 @@
         "type": "github"
       }
     },
+    "hanko": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1724404366,
+        "narHash": "sha256-sn/j8wCD24/WQ7/7IiyhmJo1ZHDEBY2+PmZVV8qIgDk=",
+        "owner": "teamhanko",
+        "repo": "hanko",
+        "rev": "92a8743c14e78a806591b23c42e8336a348aa79e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "teamhanko",
+        "repo": "hanko",
+        "type": "github"
+      }
+    },
     "home-manager": {
       "inputs": {
         "nixpkgs": [
@@ -118,6 +134,7 @@
       "inputs": {
         "agenix": "agenix",
         "flake-utils": "flake-utils",
+        "hanko": "hanko",
         "nixpkgs": "nixpkgs_2"
       }
     },
