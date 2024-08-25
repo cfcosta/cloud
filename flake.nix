@@ -5,10 +5,7 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     agenix.url = "github:ryantm/agenix";
-    hanko = {
-      url = "github:teamhanko/hanko";
-      flake = false;
-    };
+    impermanence.url = "github:nix-community/impermanence";
   };
 
   outputs =

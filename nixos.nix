@@ -1,4 +1,9 @@
-{ nixpkgs, agenix, ... }:
+{
+  nixpkgs,
+  agenix,
+  impermanence,
+  ...
+}:
 let
   inherit (builtins)
     attrNames
@@ -28,6 +33,7 @@ in
 
           modules = [
             agenix.nixosModules.default
+            impermanence.nixosModules.impermanence
             ./targets/${n}
             ./common
             ./modules

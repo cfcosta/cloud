@@ -14,6 +14,7 @@ in
   config = {
     age.secrets = {
       tailscale.file = ../secrets/tailscale.age;
+      root-password.file = ../secrets/root-password.age;
     };
 
     boot.loader.systemd-boot.enable = true;
@@ -21,6 +22,23 @@ in
 
     # Disable all default NixOS packages
     environment.defaultPackages = mkForce [ ];
+
+    environment.persistence."/nix/persist" = {
+      directories = [
+        "/srv"
+        "/var/lib"
+        "/var/log"
+      ];
+    };
+
+    # Force SSH Keys to be saved to the persistent store
+    environment.etc."ssh/ssh_host_rsa_key".source = "/nix/persist/etc/ssh/ssh_host_rsa_key";
+    environment.etc."ssh/ssh_host_rsa_key.pub".source = "/nix/persist/etc/ssh/ssh_host_rsa_key.pub";
+    environment.etc."ssh/ssh_host_ed25519_key".source = "/nix/persist/etc/ssh/ssh_host_ed25519_key";
+    environment.etc."ssh/ssh_host_ed25519_key.pub".source = "/nix/persist/etc/ssh/ssh_host_ed25519_key.pub";
+
+    # Force Machine ID to be consistent
+    environment.etc."machine-id".source = "/nix/persist/etc/machine-id";
 
     # PCI Compliance lmao
     environment.systemPackages = [ pkgs.clamav ];
@@ -68,6 +86,6 @@ in
 
     system.stateVersion = "24.11";
 
-    users.users.root.initialPasswordFile = age.secrets.root-password.path;
+    users.users.root.initialPassword = age.secrets.root-password.path;
   };
 }
