@@ -1,11 +1,11 @@
 { config, lib, ... }:
 let
   inherit (lib) mkOption types;
-  inherit (config.cloud.dns) fqdn;
+  inherit (config.cloud.dns) domain;
 in
 {
   options.cloud.dns = {
-    fqdn = mkOption {
+    domain = mkOption {
       type = types.str;
       default = "cloud.local";
       description = "The domain name to use for the DNS zone.";
@@ -23,8 +23,8 @@ in
 
       settings = {
         server = {
-          local-zone = ''"${fqdn}." redirect'';
-          local-data = ''"${fqdn}. A 192.168.9.2"'';
+          local-zone = ''"${domain}." redirect'';
+          local-data = ''"${domain}. A 192.168.9.2"'';
 
           # Based on recommended settings in https://docs.pi-hole.net/guides/dns/unbound/#configure-unbound
           harden-glue = true;

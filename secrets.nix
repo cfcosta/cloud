@@ -9,4 +9,6 @@ let
 in
 {
   "secrets/tailscale.age".publicKeys = users;
+  "secrets/authelia-jwt.age".publicKeys = users;
+  "secrets/authelia-storage-key.age".publicKeys = users;
 }

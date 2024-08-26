@@ -1,4 +1,5 @@
 {
+  config,
   lib,
   pkgs,
   ...
@@ -14,6 +15,16 @@ in
       identityPaths = [ "/nix/persist/etc/ssh/ssh_host_ed25519_key" ];
 
       secrets = {
+        authelia-jwt = {
+          file = ../secrets/authelia-jwt.age;
+          owner = config.systemd.services.authelia-default.serviceConfig.User;
+        };
+
+        authelia-storage-key = {
+          file = ../secrets/authelia-storage-key.age;
+          owner = config.systemd.services.authelia-default.serviceConfig.User;
+        };
+
         tailscale.file = ../secrets/tailscale.age;
       };
     };
