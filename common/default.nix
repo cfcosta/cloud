@@ -1,23 +1,22 @@
 {
-  config,
   lib,
   pkgs,
-  modulesPath,
   ...
 }:
 let
-  inherit (config) age;
   inherit (lib) mkDefault mkForce;
 
   locale = "en_US.UTF-8";
 in
 {
   config = {
-    imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+    age = {
+      identityPaths = [ "/nix/persist/etc/ssh/ssh_host_ed25519_key" ];
 
-    age.secrets = {
-      tailscale.file = ../secrets/tailscale.age;
-      root-password.file = ../secrets/root-password.age;
+      secrets = {
+        tailscale.file = ../secrets/tailscale.age;
+        root-password.file = ../secrets/root-password.age;
+      };
     };
 
     # Boot and bootloader config
@@ -39,6 +38,10 @@ in
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = true;
     };
+
+    documentation.man.enable = true;
+    documentation.doc.enable = true;
+    documentation.info.enable = true;
 
     # Disable all default NixOS packages
     environment.defaultPackages = mkForce [ ];
@@ -92,7 +95,7 @@ in
       auditd.enable = true;
 
       audit = {
-        enable = true;
+        enable = mkDefault true;
         rules = [
           "-a exit,always -F arch=b64 -S execve"
         ];
@@ -118,7 +121,8 @@ in
 
     system.stateVersion = "24.11";
 
-    users.users.root.initialPassword = age.secrets.root-password.path;
+    time.timeZone = "America/Sao_Paulo";
+
     users.users.operator = {
       isNormalUser = true;
       extraGroups = [ "wheel" ];
