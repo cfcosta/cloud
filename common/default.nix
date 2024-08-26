@@ -2,23 +2,43 @@
   config,
   lib,
   pkgs,
+  modulesPath,
   ...
 }:
 let
   inherit (config) age;
-  inherit (lib) mkForce;
+  inherit (lib) mkDefault mkForce;
 
   locale = "en_US.UTF-8";
 in
 {
   config = {
+    imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+
     age.secrets = {
       tailscale.file = ../secrets/tailscale.age;
       root-password.file = ../secrets/root-password.age;
     };
 
-    boot.loader.systemd-boot.enable = true;
-    boot.loader.efi.canTouchEfiVariables = true;
+    # Boot and bootloader config
+    boot.extraModulePackages = [ ];
+    boot.initrd = {
+      availableKernelModules = [
+        "nvme"
+        "ahci"
+        "thunderbolt"
+        "xhci_pci"
+        "usbhid"
+        "usb_storage"
+        "sd_mod"
+      ];
+      kernelModules = [ ];
+    };
+    boot.kernelModules = [ "kvm-amd" ];
+    boot.loader = {
+      efi.canTouchEfiVariables = true;
+      systemd-boot.enable = true;
+    };
 
     # Disable all default NixOS packages
     environment.defaultPackages = mkForce [ ];
@@ -48,6 +68,11 @@ in
     fileSystems."/srv".options = [ "noexec" ];
     fileSystems."/var/log".options = [ "noexec" ];
 
+    hardware = {
+      enableRedistributableFirmware = true;
+      cpu.amd.updateMicrocode = true;
+    };
+
     i18n.defaultLocale = locale;
     i18n.extraLocaleSettings = {
       LC_ADDRESS = locale;
@@ -60,6 +85,8 @@ in
       LC_TELEPHONE = locale;
       LC_TIME = locale;
     };
+
+    networking.useDHCP = mkDefault true;
 
     security = {
       auditd.enable = true;
@@ -92,5 +119,9 @@ in
     system.stateVersion = "24.11";
 
     users.users.root.initialPassword = age.secrets.root-password.path;
+    users.users.operator = {
+      isNormalUser = true;
+      extraGroups = [ "wheel" ];
+    };
   };
 }
