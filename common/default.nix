@@ -15,7 +15,6 @@ in
 
       secrets = {
         tailscale.file = ../secrets/tailscale.age;
-        root-password.file = ../secrets/root-password.age;
       };
     };
 
